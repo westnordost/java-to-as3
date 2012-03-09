@@ -1,5 +1,5 @@
-Java to AS3 Compiler
-====================
+Java to AS3 Compiler v1.0.5
+===========================
 
 This software was developed by [Sojo Studios, Inc.](http://www.sojostudios.com/)
 Please visit the [project's home page](https://github.com/Sojo-Studios/sojo-det).
@@ -19,17 +19,20 @@ Features
 --------
 The major features of this compiler revolve around the ability to perform basic mutations
 from Java-specific classes into AS3 equivalents. The three major targets are:
+
 * Arrays
 * Vectors
 * Dictionaries
 
 The use of these classes is fundamentally different within the context of AS3, but there
 are obviously Java counterparts:
+
 * Arrays and Lists
 * Lists
 * Maps
 
 The default mutations include:
+
 * The conversion of any array, typed as "L[Class]" in Java, into an AS3 Array
 * The conversion of some Lists into AS3 Vectors, including template-typing
 * The conversion of some Maps into AS3 Dictionaries
@@ -136,7 +139,7 @@ You then need to add a dependency for `sojo-java-to-as3` to your `ivy.xml` file 
 	<conf name="runtime" visibility="public" description="libraries used during runtime." extends="compile"/>
 </configurations>
 <dependencies>
-	<dependency org="com.sojostudios" name="sojo-java-to-as3" rev="1.0.0" conf="compile->master(*)"/>
+	<dependency org="com.sojostudios" name="sojo-java-to-as3" rev="1.0.5" conf="compile->master(*)"/>
 </dependencies>
 ```
 
