@@ -2,7 +2,7 @@ Java to AS3 Compiler v1.0.5
 ===========================
 
 This software was developed by [Sojo Studios, Inc.](http://www.sojostudios.com/)
-Please visit the [project's home page](https://github.com/Sojo-Studios/sojo-det).
+Please visit the [project's home page](https://github.com/Sojo-Studios/java-to-as3).
 
 This is a tool that will take Java 1.5 source code and make a best-effort translation of that 
 code into AS3 code. The resulting AS3 code can then be compiled into a SWF or SWC using
