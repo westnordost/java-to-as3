@@ -139,7 +139,7 @@ You then need to add a dependency for `sojo-java-to-as3` to your `ivy.xml` file 
 	<conf name="runtime" visibility="public" description="libraries used during runtime." extends="compile"/>
 </configurations>
 <dependencies>
-	<dependency org="com.sojostudios" name="sojo-java-to-as3" rev="1.0.5" conf="compile->master(*)"/>
+	<dependency org="com.sojostudios" name="sojo-java-to-as3" rev="1.0.5" conf="compile->master(*);runtime->default"/>
 </dependencies>
 ```
 
