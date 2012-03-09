@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="java-det" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>Tasks for the Java To AS3 project</description>
+	
+	<loadproperties srcFile="build.properties" />
+	
+	<property name="lib.dir" value="lib" />
+	<property name="build.dir" value="bin" />
+	<property name="src.dir" value="src" />
+	<property name="jar.dir" value="jar" />
+	<property name="jar.name" value="sojo-java-to-as3" />
+	<property name="jar.version" value="${build.version}" />
+	
+	<ivy:settings file="ivysettings.xml" />
+	
+	<path id="classpath.base">
+		<fileset dir="${lib.dir}"/>
+	</path>
+	
+	<path id="classpath.bin">
+		<fileset dir="${build.dir}"/>
+	</path>
+	
+	<loadproperties srcFile="log4j.properties" />
+	
+	<target name="resolve" description="resolve dependencies">
+		<ivy:retrieve conf="compile"/>
+	</target>
+	
+	<target name="resolve-runtime" description="resolve dependencies">
+		<ivy:retrieve conf="default" pattern="${lib.dir}/runtime/[artifact]-[revision].[ext]"/>
+	</target>
+	
+	<target name="publish" description="push updated jar">
+		<ivy:resolve file="ivy.xml"/>
+		<ivy:publish resolver="socialbon.com" revision="${jar.version}" organisation="com.sojostudios" module="${jar.name}" 
+			status="release" update="true" overwrite="true">
+			<artifacts pattern="${jar.dir}/${jar.name}-${jar.version}.[ext]" />
+		</ivy:publish>
+	</target>
+	
+	<target name="report" depends="resolve" description="generates a report of dependencies">
+		<ivy:report todir="${build.dir}"/>
+	</target>
+	
+	<target name="clean-cache" description="clean the ivy cache">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="clean" description="clean project directories">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<delete dir="${jar.dir}" />
+		<delete dir="${lib.dir}" />
+	</target>
+
+	<target name="compile" depends="clean,resolve">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" verbose="false" debug="true" debugLevel="lines,vars,source" 
+			includeantruntime="false" target="1.6">
+			<classpath refid="classpath.base" />
+		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="test" depends="compile,jar">
+		
+		<junit printsummary="yes" haltonfailure="yes" showoutput="true">
+			<classpath>
+				<path refid="classpath.base" />
+				<pathelement location="bin" />
+			</classpath>
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="yes">
+				<fileset dir="src">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		
+		<path id="classpath.jar">
+			<fileset dir="jar"/>
+		</path>
+		
+		<taskdef name="javaToAs3" classname="com.sojostudios.as3.ant.JavaToAS3Task">
+			<classpath refid="classpath.jar" />
+			<classpath refid="classpath.base" />
+		</taskdef>
+		
+		<javaToAs3>
+			<sourceTarget src="test/com/sojostudios/as3/TestObject.java" dst="bin/com/sojostudios/as3/TestObject.as" forceMovieClip="true"/>
+		</javaToAs3>
+		
+	</target>
+	
+	<target name="jar" depends="compile">
+		<mkdir dir="${jar.dir}" />
+		<jar destfile="${jar.dir}/${jar.name}-${jar.version}.jar" basedir="${build.dir}" >
+		</jar>
+	</target>
+	
+</project>
