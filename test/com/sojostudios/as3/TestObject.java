@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A test class.
+ * 
+ * @author Kurtis Kopf
+ *
+ */
 public class TestObject
 {
 	public static final String FINAL_STRING = "my final string";
@@ -16,6 +22,15 @@ public class TestObject
 		
 	}
 	
+	/**
+	 * a test method
+	 * 
+	 * @param a an object
+	 * @param b something
+	 * @param c a list of stuff
+	 * @return a boolean value
+	 * @throws Exception when stuff breaks
+	 */
 	@SuppressWarnings(value = { "" })
 	public boolean testMethod1(Object a, Class<? extends Object> b, List<String> c) throws Exception
 	{
@@ -71,6 +86,11 @@ public class TestObject
 		{
 			e.toString();
 		}
+		
+		/*
+		 * @AS3
+		 * var cake:int = 0;
+		 */
 
 		return false || true;
 	}

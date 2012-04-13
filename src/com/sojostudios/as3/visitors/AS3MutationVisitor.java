@@ -81,23 +81,172 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		importsToImports.put("java\\.util\\..*Map", "flash.utils.Dictionary");
 		
 		classesToClasses.put("Exception", "Error");
+		classesToClasses.put("java.lang.Exception", "Error");
 		classesToClasses.put("Integer", "Number");
+		classesToClasses.put("java.lang.Integer", "Number");
 		classesToClasses.put("Double", "Number");
+		classesToClasses.put("java.lang.Double", "Number");
 		classesToClasses.put("Float", "Number");
+		classesToClasses.put("java.lang.Float", "Number");
 		classesToClasses.put("Long", "Number");
+		classesToClasses.put("java.lang.Long", "Number");
 		classesToClasses.put("Short", "Number");
+		classesToClasses.put("java.lang.Short", "Number");
 		classesToClasses.put("Character", "String");
+		classesToClasses.put("java.lang.Character", "String");
 		
-		//classesToArrays.add("List");
-		//classesToArrays.add("ArrayList");
-		//classesToArrays.add("LinkedList");
+		// list taken from here: http://docs.oracle.com/javase/6/docs/api/java/util/Collection.html
+		classesToVectors.add("Collection");
+		classesToVectors.add("java.util.Collection");
 		
+		// interfaces
+		classesToVectors.add("BeanContext");
+		classesToVectors.add("java.beans.beancontext.BeanContext");
+		classesToVectors.add("BeanContextServices");
+		classesToVectors.add("java.beans.beancontext.BeanContextServices");
+		classesToVectors.add("BlockingDeque");
+		classesToVectors.add("java.util.concurrent.BlockingDeque");
+		classesToVectors.add("BlockingQueue");
+		classesToVectors.add("java.util.concurrent.BlockingQueue");
+		classesToVectors.add("Deque");
+		classesToVectors.add("java.util.Deque");
 		classesToVectors.add("List");
-		classesToVectors.add("ArrayList");
-		classesToVectors.add("LinkedList");
+		classesToVectors.add("java.util.List");
+		classesToVectors.add("NavigableSet");
+		classesToVectors.add("java.util.NavigableSet");
+		classesToVectors.add("Queue");
+		classesToVectors.add("java.util.Queue");
+		classesToVectors.add("Set");
+		classesToVectors.add("java.util.Set");
+		classesToVectors.add("SortedSet");
+		classesToVectors.add("java.util.SortedSet");
 		
+		// implementing classes
+		classesToVectors.add("AbstractCollection");
+		classesToVectors.add("java.util.AbstractCollection");
+		classesToVectors.add("AbstractList");
+		classesToVectors.add("java.util.AbstractList");
+		classesToVectors.add("AbstractQueue");
+		classesToVectors.add("java.util.AbstractQueue");
+		classesToVectors.add("AbstractSequentialList");
+		classesToVectors.add("java.util.AbstractSequentialList");
+		classesToVectors.add("AbstractSet");
+		classesToVectors.add("java.util.AbstractSet");
+		classesToVectors.add("ArrayBlockingQueue");
+		classesToVectors.add("java.util.concurrent.ArrayBlockingQueue");
+		classesToVectors.add("ArrayDeque");
+		classesToVectors.add("java.util.ArrayDeque");
+		classesToVectors.add("ArrayList");
+		classesToVectors.add("java.util.ArrayList");
+		classesToVectors.add("AttributeList");
+		classesToVectors.add("javax.management.AttributeList");
+		classesToVectors.add("BeanContextServicesSupport");
+		classesToVectors.add("java.beans.beancontext.BeanContextServicesSupport");
+		classesToVectors.add("BeanContextSupport");
+		classesToVectors.add("java.beans.beancontext.BeanContextSupport");
+		classesToVectors.add("ConcurrentLinkedQueue");
+		classesToVectors.add("java.util.concurrent.ConcurrentLinkedQueue");
+		classesToVectors.add("ConcurrentSkipListSet");
+		classesToVectors.add("java.util.concurrent.ConcurrentSkipListSet");
+		classesToVectors.add("CopyOnWriteArrayList");
+		classesToVectors.add("java.util.concurrent.CopyOnWriteArrayList");
+		classesToVectors.add("CopyOnWriteArraySet");
+		classesToVectors.add("java.util.concurrent.CopyOnWriteArraySet");
+		classesToVectors.add("DelayQueue");
+		classesToVectors.add("java.util.concurrent.DelayQueue");
+		classesToVectors.add("EnumSet");
+		classesToVectors.add("java.util.EnumSet");
+		classesToVectors.add("HashSet");
+		classesToVectors.add("java.util.HashSet");
+		classesToVectors.add("JobStateReasons");
+		classesToVectors.add("javax.print.attribute.standard.JobStateReasons");
+		classesToVectors.add("LinkedBlockingDeque");
+		classesToVectors.add("java.util.concurrent.LinkedBlockingDeque");
+		classesToVectors.add("LinkedBlockingQueue");
+		classesToVectors.add("java.util.concurrent.LinkedBlockingQueue");
+		classesToVectors.add("LinkedHashSet");
+		classesToVectors.add("java.util.LinkedHashSet");
+		classesToVectors.add("LinkedList");
+		classesToVectors.add("java.util.LinkedList");
+		classesToVectors.add("PriorityBlockingQueue");
+		classesToVectors.add("java.util.concurrent.PriorityBlockingQueue");
+		classesToVectors.add("PriorityQueue");
+		classesToVectors.add("java.util.PriorityQueue");
+		classesToVectors.add("RoleList");
+		classesToVectors.add("javax.management.relation.RoleList");
+		classesToVectors.add("RoleUnresolvedList");
+		classesToVectors.add("javax.management.relation.RoleUnresolvedList");
+		classesToVectors.add("Stack");
+		classesToVectors.add("java.util.Stack");
+		classesToVectors.add("SynchronousQueue");
+		classesToVectors.add("java.util.concurrent.SynchronousQueue");
+		classesToVectors.add("TreeSet");
+		classesToVectors.add("java.util.TreeSet");
+		classesToVectors.add("Vector");
+		classesToVectors.add("java.util.Vector");
+		
+		
+		// list taken from http://docs.oracle.com/javase/6/docs/api/java/util/Map.html
 		classesToDictionaries.add("Map");
+		classesToDictionaries.add("java.util.Map");
+		
+		// interfaces
+		classesToDictionaries.add("Bindings");
+		classesToDictionaries.add("javax.script.Bindings");
+		classesToDictionaries.add("ConcurrentMap");
+		classesToDictionaries.add("java.util.concurrent.ConcurrentMap");
+		classesToDictionaries.add("ConcurrentNavigableMap");
+		classesToDictionaries.add("java.util.concurrent.ConcurrentNavigableMap");
+		classesToDictionaries.add("LogicalMessageContext");
+		classesToDictionaries.add("javax.xml.ws.handler.LogicalMessageContext");
+		classesToDictionaries.add("MessageContext");
+		classesToDictionaries.add("javax.xml.ws.handler.MessageContext");
+		classesToDictionaries.add("NavigableMap");
+		classesToDictionaries.add("java.util.NavigableMap");
+		classesToDictionaries.add("SOAPMessageContext");
+		classesToDictionaries.add("javax.xml.ws.handler.soap.SOAPMessageContext");
+		classesToDictionaries.add("SortedMap");
+		classesToDictionaries.add("java.util.SortedMap");
+		
+		// classes
+		classesToDictionaries.add("AbstractMap");
+		classesToDictionaries.add("java.util.AbstractMap");
+		classesToDictionaries.add("Attributes");
+		classesToDictionaries.add("java.util.jar.Attributes");
+		classesToDictionaries.add("AuthProvider");
+		classesToDictionaries.add("java.security.AuthProvider");
+		classesToDictionaries.add("ConcurrentHashMap");
+		classesToDictionaries.add("java.util.concurrent.ConcurrentHashMap");
+		classesToDictionaries.add("ConcurrentSkipListMap");
+		classesToDictionaries.add("java.util.concurrent.ConcurrentSkipListMap");
+		classesToDictionaries.add("EnumMap");
+		classesToDictionaries.add("java.util.EnumMap");
 		classesToDictionaries.add("HashMap");
+		classesToDictionaries.add("java.util.HashMap");
+		classesToDictionaries.add("Hashtable");
+		classesToDictionaries.add("java.util.Hashtable");
+		classesToDictionaries.add("IdentityHashMap");
+		classesToDictionaries.add("java.util.IdentityHashMap");
+		classesToDictionaries.add("LinkedHashMap");
+		classesToDictionaries.add("java.util.LinkedHashMap");
+		classesToDictionaries.add("PrinterStateReasons");
+		classesToDictionaries.add("javax.print.attribute.standard.PrinterStateReasons");
+		classesToDictionaries.add("Properties");
+		classesToDictionaries.add("java.util.Properties");
+		classesToDictionaries.add("Provider");
+		classesToDictionaries.add("java.security.Provider");
+		classesToDictionaries.add("RenderingHints");
+		classesToDictionaries.add("java.awt.RenderingHints");
+		classesToDictionaries.add("SimpleBindings");
+		classesToDictionaries.add("javax.script.SimpleBindings");
+		classesToDictionaries.add("TabularDataSupport");
+		classesToDictionaries.add("javax.management.openmbean.TabularDataSupport");
+		classesToDictionaries.add("TreeMap");
+		classesToDictionaries.add("java.util.TreeMap");
+		classesToDictionaries.add("UIDefaults");
+		classesToDictionaries.add("javax.swing.UIDefaults");
+		classesToDictionaries.add("WeakHashMap");
+		classesToDictionaries.add("java.util.WeakHashMap");
 	}
 
 	/**
