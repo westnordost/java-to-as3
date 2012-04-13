@@ -1,4 +1,4 @@
-Java to AS3 Compiler v1.0.5
+Java to AS3 Compiler v1.0.6
 ===========================
 
 This software was developed by [Sojo Studios, Inc.](http://www.sojostudios.com/)
@@ -28,7 +28,7 @@ The use of these classes is fundamentally different within the context of AS3, b
 are obviously Java counterparts:
 
 * Arrays and Lists
-* Lists
+* Lists / Collections
 * Maps
 
 The default mutations include:
