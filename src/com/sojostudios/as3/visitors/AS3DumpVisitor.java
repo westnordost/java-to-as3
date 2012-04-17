@@ -224,17 +224,23 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 			{
 				comment = false;
 			}
-			printer.print((comment?"/*":".") + "<");
-			for (Iterator<Type> i = args.iterator(); i.hasNext();)
+			// TODO: comments fail with embedded generics 
+			// ie: HashMap<String,Map<String,String>> => HashMap/*<String,Map/*<String,String>*/>*/ => parse error
+			// remove if(!comment) when this is fixed
+			if (!comment)
 			{
-				Type t = i.next();
-				t.accept(this, arg);
-				if (i.hasNext())
+				printer.print((comment?"/*":".") + "<");
+				for (Iterator<Type> i = args.iterator(); i.hasNext();)
 				{
-					printer.print(", ");
+					Type t = i.next();
+					t.accept(this, arg);
+					if (i.hasNext())
+					{
+						printer.print(", ");
+					}
 				}
+				printer.print(">"+(comment?"*/":""));
 			}
-			printer.print(">"+(comment?"*/":""));
 		}
 	}
 
@@ -242,17 +248,20 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 	{
 		if (args != null)
 		{
-			printer.print("/*<");
-			for (Iterator<TypeParameter> i = args.iterator(); i.hasNext();)
-			{
-				TypeParameter t = i.next();
-				t.accept(this, arg);
-				if (i.hasNext())
-				{
-					printer.print(", ");
-				}
-			}
-			printer.print(">*/");
+			// TODO: this also fails with embedded generics
+			// uncomment after fixed
+			
+			//printer.print("/*<");
+			//for (Iterator<TypeParameter> i = args.iterator(); i.hasNext();)
+			//{
+			//	TypeParameter t = i.next();
+			//	t.accept(this, arg);
+			//	if (i.hasNext())
+			//	{
+			//		printer.print(", ");
+			//	}
+			//}
+			//printer.print(">*/");
 		}
 	}
 
