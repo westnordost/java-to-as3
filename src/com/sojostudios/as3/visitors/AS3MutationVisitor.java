@@ -58,6 +58,9 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	private List<String> classesToArrays = new ArrayList<String>();
 	private List<String> classesToDictionaries = new ArrayList<String>();
 	private List<String> classesToVectors = new ArrayList<String>();
+	private List<String> classesExtendArray = new ArrayList<String>();
+	private List<String> classesExtendDictionary = new ArrayList<String>();
+	private List<String> classesExtendVector = new ArrayList<String>();
 	private boolean forceSprite = false;
 	private boolean forceMovieClip = false;
 	
@@ -558,6 +561,33 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 				// register variable type even for unmodified vars
 				if (!modified)
 				{
+					List<String> flags = new ArrayList<String>();
+					// look for extensions
+					// array extension
+					for(String classExtArray : classesExtendArray)
+					{
+						if (name.matches(classExtArray))
+						{
+							flags.add(ARRAY_MUTATION_FLAG);
+						}
+					}
+					// dictionary extension
+					for(String classExtDict : classesExtendDictionary)
+					{
+						if (name.matches(classExtDict))
+						{
+							flags.add(DICTIONARY_MUTATION_FLAG);
+						}
+					}
+					// vector extension
+					for(String classExtVector : classesExtendVector)
+					{
+						if (name.matches(classExtVector))
+						{
+							flags.add(VECTOR_MUTATION_FLAG);
+						}
+					}
+					// register declarators
 					for(VariableDeclarator varDec : vars)
 					{
 						// register mutation at current scope
@@ -565,13 +595,39 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 						VarMutation mut = varScope.getVarCurScopeOnly(varDec.getId().getName());
 						if (mut == null)
 						{
-							varScope.addVar(varDec.getId().getName(), ct, null);
+							logger.info("registering variable " + varDec.getId().getName() + " with mutation flags: " + flags);
+							varScope.addVar(varDec.getId().getName(), ct, flags);
 						}
 					}
 				}
 			}
 		}
 		return modified;
+	}
+	
+	/**
+	 * Register a variable mutation.
+	 * 
+	 * @param name
+	 * @param flag
+	 * @param ct
+	 */
+	private void registerMutation(String name, String flag, ClassOrInterfaceType ct)
+	{
+		VarMutation mut = varScope.getVarCurScopeOnly(name);
+		if (mut != null)
+		{
+			if (!mut.hasFlag(flag))
+			{	
+				mut.mutationFlags.add(flag);
+			}
+		}
+		else
+		{
+			List<String> flags = new ArrayList<String>();
+			flags.add(flag);
+			varScope.addVar(name, ct, flags);
+		}
 	}
 
 	/**
@@ -601,20 +657,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		{
 			// register mutation at current scope
 			logger.info("registering Array mutation for variable " + varDec.getId().getName());
-			VarMutation mut = varScope.getVarCurScopeOnly(varDec.getId().getName());
-			if (mut != null)
-			{
-				if (!mut.hasFlag(ARRAY_MUTATION_FLAG))
-				{	
-					mut.mutationFlags.add(ARRAY_MUTATION_FLAG);
-				}
-			}
-			else
-			{
-				List<String> flags = new ArrayList<String>();
-				flags.add(ARRAY_MUTATION_FLAG);
-				varScope.addVar(varDec.getId().getName(), ct, flags);
-			}
+			registerMutation(varDec.getId().getName(), ARRAY_MUTATION_FLAG, ct);
 			
 			Expression init = varDec.getInit();
 			if (init != null)
@@ -644,20 +687,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		{
 			// register mutation at current scope
 			logger.info("registering Vector mutation for variable " + varDec.getId().getName());
-			VarMutation mut = varScope.getVarCurScopeOnly(varDec.getId().getName());
-			if (mut != null)
-			{
-				if (!mut.hasFlag(VECTOR_MUTATION_FLAG))
-				{	
-					mut.mutationFlags.add(VECTOR_MUTATION_FLAG);
-				}
-			}
-			else
-			{
-				List<String> flags = new ArrayList<String>();
-				flags.add(VECTOR_MUTATION_FLAG);
-				varScope.addVar(varDec.getId().getName(), ct, flags);
-			}
+			registerMutation(varDec.getId().getName(), VECTOR_MUTATION_FLAG, ct);
 			
 			Expression init = varDec.getInit();
 			if (init != null)
@@ -693,20 +723,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		{
 			// register mutation at current scope
 			logger.info("registering Dictionary mutation for variable " + varDec.getId().getName());
-			VarMutation mut = varScope.getVarCurScopeOnly(varDec.getId().getName());
-			if (mut != null)
-			{
-				if (!mut.hasFlag(DICTIONARY_MUTATION_FLAG))
-				{	
-					mut.mutationFlags.add(DICTIONARY_MUTATION_FLAG);
-				}
-			}
-			else
-			{
-				List<String> flags = new ArrayList<String>();
-				flags.add(DICTIONARY_MUTATION_FLAG);
-				varScope.addVar(varDec.getId().getName(), ct, flags);
-			}
+			registerMutation(varDec.getId().getName(), DICTIONARY_MUTATION_FLAG, ct);
 			
 			Expression init = varDec.getInit();
 			if (init != null)
@@ -774,6 +791,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 				{
 					if (type.matches(classToArray))
 					{
+						logger.info("adding Array mutation flag to parameter " + n.getId().getName());
 						flags.add(ARRAY_MUTATION_FLAG);
 					}
 				}
@@ -782,6 +800,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 				{
 					if (type.matches(classToDict))
 					{
+						logger.info("adding Dictionary mutation flag to parameter " + n.getId().getName());
 						flags.add(DICTIONARY_MUTATION_FLAG);
 					}
 				}
@@ -790,6 +809,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 				{
 					if (type.matches(classToVect))
 					{
+						logger.info("adding Vector mutation flag to parameter " + n.getId().getName());
 						flags.add(VECTOR_MUTATION_FLAG);
 					}
 				}
@@ -925,6 +945,54 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	public void setClassesToVectors(List<String> classesToVectors)
 	{
 		this.classesToVectors = classesToVectors;
+	}
+
+	/**
+	 * @return the classesExtendArray
+	 */
+	public List<String> getClassesExtendArray() 
+	{
+		return classesExtendArray;
+	}
+
+	/**
+	 * @param classesExtendArray the classesExtendArray to set
+	 */
+	public void setClassesExtendArray(List<String> classesExtendArray) 
+	{
+		this.classesExtendArray = classesExtendArray;
+	}
+
+	/**
+	 * @return the classesExtendDictionaries
+	 */
+	public List<String> getClassesExtendDictionary() 
+	{
+		return classesExtendDictionary;
+	}
+
+	/**
+	 * @param classesExtendDictionaries the classesExtendDictionaries to set
+	 */
+	public void setClassesExtendDictionary(List<String> classesExtendDictionary) 
+	{
+		this.classesExtendDictionary = classesExtendDictionary;
+	}
+
+	/**
+	 * @return the classesExtendVectors
+	 */
+	public List<String> getClassesExtendVector() 
+	{
+		return classesExtendVector;
+	}
+
+	/**
+	 * @param classesExtendVectors the classesExtendVectors to set
+	 */
+	public void setClassesExtendVector(List<String> classesExtendVector) 
+	{
+		this.classesExtendVector = classesExtendVector;
 	}
 
 	/**

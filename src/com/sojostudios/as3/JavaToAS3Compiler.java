@@ -119,6 +119,9 @@ public class JavaToAS3Compiler
 	private List<String> classesToArrays = new ArrayList<String>();
 	private List<String> classesToDictionaries = new ArrayList<String>();
 	private List<String> classesToVectors = new ArrayList<String>();
+	private List<String> classesExtendArray = new ArrayList<String>();
+	private List<String> classesExtendDictionary = new ArrayList<String>();
+	private List<String> classesExtendVector = new ArrayList<String>();
 	private boolean forceSprite = false;
 	private boolean forceMovieClip = false;
 	
@@ -255,6 +258,18 @@ public class JavaToAS3Compiler
 		if (classesToVectors != null && classesToVectors.size() > 0)
 		{
 			as3Mut.getClassesToVectors().addAll(classesToVectors);
+		}
+		if (classesExtendArray != null && classesExtendArray.size() > 0)
+		{
+			as3Mut.getClassesExtendArray().addAll(classesExtendArray);
+		}
+		if (classesExtendDictionary != null && classesExtendDictionary.size() > 0)
+		{
+			as3Mut.getClassesExtendDictionary().addAll(classesExtendDictionary);
+		}
+		if (classesExtendVector != null && classesExtendVector.size() > 0)
+		{
+			as3Mut.getClassesExtendVector().addAll(classesExtendVector);
 		}
 	}
 
@@ -429,9 +444,57 @@ public class JavaToAS3Compiler
 	/**
 	 * @param classesToVectors the classesToVectors to set
 	 */
-	public void setClassesToVectors(List<String> classesToVectors)
+	public void setClassesToVectors(List<String> classesToVectors) 
 	{
 		this.classesToVectors = classesToVectors;
+	}
+
+	/**
+	 * @return the classesExtendArray
+	 */
+	public List<String> getClassesExtendArray() 
+	{
+		return classesExtendArray;
+	}
+
+	/**
+	 * @param classesExtendArray the classesExtendArray to set
+	 */
+	public void setClassesExtendArray(List<String> classesExtendArray) 
+	{
+		this.classesExtendArray = classesExtendArray;
+	}
+
+	/**
+	 * @return the classesExtendDictionaries
+	 */
+	public List<String> getClassesExtendDictionary() 
+	{
+		return classesExtendDictionary;
+	}
+
+	/**
+	 * @param classesExtendDictionaries the classesExtendDictionaries to set
+	 */
+	public void setClassesExtendDictionary(List<String> classesExtendDictionary) 
+	{
+		this.classesExtendDictionary = classesExtendDictionary;
+	}
+
+	/**
+	 * @return the classesExtendVectors
+	 */
+	public List<String> getClassesExtendVector() 
+	{
+		return classesExtendVector;
+	}
+
+	/**
+	 * @param classesExtendVectors the classesExtendVectors to set
+	 */
+	public void setClassesExtendVector(List<String> classesExtendVector) 
+	{
+		this.classesExtendVector = classesExtendVector;
 	}
 
 	/**

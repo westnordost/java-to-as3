@@ -20,6 +20,8 @@ public class TestObject
 	private List<String> hiddenList = new ArrayList<String>();
 	private Map<String,String> hiddenMap = new HashMap<String,String>();
 	
+	private TestMap testMap = new TestMap();
+	
 	public TestObject()
 	{
 		
@@ -44,6 +46,8 @@ public class TestObject
 		hiddenList.get(0);
 		hiddenMap.put("a", "b");
 		hiddenMap.get("a");
+		
+		testMap.put("b","c");
 		
 		int myInt = 0;
 		long myLong;

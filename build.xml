@@ -90,7 +90,7 @@
 			<classpath refid="classpath.base" />
 		</taskdef>
 		
-		<javaToAs3>
+		<javaToAs3 classesExtendDictionary="TestMap">
 			<sourceTarget src="${basedir}/test/com/sojostudios/as3/TestObject.java" dst="${basedir}/bin/com/sojostudios/as3/TestObject.as" forceMovieClip="true"/>
 		</javaToAs3>
 		
