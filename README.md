@@ -173,7 +173,7 @@ v1.0.7
 * fixed scoping/mutation problem with class field declarations
 
 v1.0.6a
-* removed comments for Map declarations, Map<a,Map<b,c>> were creating syntax errors
+* removed comments for Map declarations, Map&lt;a,Map&lt;b,c&gt;&gt; were creating syntax errors
 
 v1.0.6
 * added all standard Collection and Map classes for conversion
