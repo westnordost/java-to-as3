@@ -12,6 +12,7 @@ import japa.parser.ast.ImportDeclaration;
 import japa.parser.ast.Node;
 import japa.parser.ast.PackageDeclaration;
 import japa.parser.ast.body.ClassOrInterfaceDeclaration;
+import japa.parser.ast.body.FieldDeclaration;
 import japa.parser.ast.body.Parameter;
 import japa.parser.ast.body.VariableDeclarator;
 import japa.parser.ast.expr.ArrayAccessExpr;
@@ -29,6 +30,7 @@ import japa.parser.ast.expr.VariableDeclarationExpr;
 import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.ReferenceType;
+import japa.parser.ast.type.Type;
 import japa.parser.ast.visitor.ModifierVisitorAdapter;
 
 /**
@@ -486,11 +488,40 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	@Override
 	public Node visit(VariableDeclarationExpr n, Object arg)
 	{
-		// appropriate methods with name accessors
-		boolean modified = false;
-		if (n.getType() instanceof ReferenceType)
+		boolean modified = modifyDecl(n.getType(), n.getVars());
+		if (modified)
 		{
-			ReferenceType rt = (ReferenceType)n.getType();
+			return n;
+		}
+		else
+		{
+			return super.visit(n, arg);
+		}
+	}
+	
+	/**
+	 * Convert Arrays and Dictionaries for field declarations
+	 */
+	@Override
+	public Node visit(FieldDeclaration n, Object arg) 
+	{
+		boolean modified = modifyDecl(n.getType(), n.getVariables());
+		if (modified)
+		{
+			return n;
+		}
+		else
+		{
+			return super.visit(n, arg);
+		}
+	}
+	
+	private boolean modifyDecl(Type type, List<VariableDeclarator> vars)
+	{
+		boolean modified = false;
+		if (type instanceof ReferenceType)
+		{
+			ReferenceType rt = (ReferenceType)type;
 			
 			if (rt.getType() instanceof ClassOrInterfaceType)
 			{
@@ -503,7 +534,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					if (name.matches(classToArray))
 					{
 						modified = true;
-						varDeclToArray(n, rt, ct);
+						varDeclToArray(vars, rt, ct);
 					}
 				}
 				// Dictionary conversions
@@ -512,7 +543,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					if (name.matches(classToDict))
 					{
 						modified = true;
-						varDeclToDictionary(n, rt, ct);
+						varDeclToDictionary(vars, rt, ct);
 					}
 				}
 				// Vector conversions
@@ -521,13 +552,13 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					if (name.matches(classToVect))
 					{
 						modified = true;
-						varDeclToVector(n, rt, ct);
+						varDeclToVector(vars, rt, ct);
 					}
 				}
 				// register variable type even for unmodified vars
 				if (!modified)
 				{
-					for(VariableDeclarator varDec : n.getVars())
+					for(VariableDeclarator varDec : vars)
 					{
 						// register mutation at current scope
 						//logger.info("registering scope for variable " + varDec.getId().getName());
@@ -540,16 +571,9 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 				}
 			}
 		}
-		if (modified)
-		{
-			return n;
-		}
-		else
-		{
-			return super.visit(n, arg);
-		}
+		return modified;
 	}
-	
+
 	/**
 	 * Convert a variable declaration to an Array declaration.
 	 * 
@@ -557,7 +581,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 * @param rt
 	 * @param ct
 	 */
-	private void varDeclToArray(VariableDeclarationExpr n, ReferenceType rt, ClassOrInterfaceType ct)
+	private void varDeclToArray(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
 	{
 		logger.info("Converting variable declaration " + ct + " to Array declaration with typing info");
 		// take the first typearg if it exists
@@ -573,7 +597,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		rt.setArrayCount(1);
 		
 		// change initializer (should only be one, but who the hell knows)
-		for(VariableDeclarator varDec : n.getVars())
+		for(VariableDeclarator varDec : vars)
 		{
 			// register mutation at current scope
 			logger.info("registering Array mutation for variable " + varDec.getId().getName());
@@ -602,6 +626,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		}
 	}
 	
+	
 	/**
 	 * Convert a variable declaration to a Vector.
 	 * This is the least complex of the conversions.
@@ -609,13 +634,13 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 * @param rt
 	 * @param ct
 	 */
-	private void varDeclToVector(VariableDeclarationExpr n, ReferenceType rt, ClassOrInterfaceType ct)
+	private void varDeclToVector(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
 	{
 		logger.info("Converting variable declaration " + ct + " to Array declaration with typing info");
 		
 		ct.setName("Vector");
 		
-		for(VariableDeclarator varDec : n.getVars())
+		for(VariableDeclarator varDec : vars)
 		{
 			// register mutation at current scope
 			logger.info("registering Vector mutation for variable " + varDec.getId().getName());
@@ -655,7 +680,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 * @param rt
 	 * @param ct
 	 */
-	private void varDeclToDictionary(VariableDeclarationExpr n, ReferenceType rt, ClassOrInterfaceType ct)
+	private void varDeclToDictionary(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
 	{
 		logger.info("Converting variable declaration " + ct + " to Dictionary declaration without typing");
 		// take the first typearg if it exists
@@ -664,7 +689,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		ct.setName(newName);
 		
 		// change initializer (should only be one, but who the hell knows)
-		for(VariableDeclarator varDec : n.getVars())
+		for(VariableDeclarator varDec : vars)
 		{
 			// register mutation at current scope
 			logger.info("registering Dictionary mutation for variable " + varDec.getId().getName());

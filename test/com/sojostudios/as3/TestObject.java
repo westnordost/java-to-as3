@@ -17,6 +17,9 @@ public class TestObject
 	
 	private int hiddenInt = 12354;
 	
+	private List<String> hiddenList = new ArrayList<String>();
+	private Map<String,String> hiddenMap = new HashMap<String,String>();
+	
 	public TestObject()
 	{
 		
@@ -36,6 +39,11 @@ public class TestObject
 	{
 		c.add("cookies");
 		c.get(0);
+		
+		hiddenList.add("hiddenString");
+		hiddenList.get(0);
+		hiddenMap.put("a", "b");
+		hiddenMap.get("a");
 		
 		int myInt = 0;
 		long myLong;
