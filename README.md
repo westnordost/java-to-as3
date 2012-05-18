@@ -1,4 +1,4 @@
-Java to AS3 Compiler v1.0.8
+Java to AS3 Compiler v1.0.9
 ===========================
 
 This software was developed by [Sojo Studios, Inc.](http://www.sojostudios.com/)
@@ -168,6 +168,9 @@ root project directory and will create a .jar file in the jar/ directory.
 
 Changelog
 ---------
+
+v1.0.9
+* added support for loglevel attribute in ant task
 
 v1.0.8
 * added support for extending array/vector/dictionary types
