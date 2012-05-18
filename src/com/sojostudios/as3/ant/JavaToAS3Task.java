@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -26,6 +28,9 @@ import com.sojostudios.as3.ant.types.SourceTarget;
  *     </javaToAs3>
  * </pre>
  * 
+ * Property loglevel can also be set to OFF|ALL|DEBUG|INFO|WARN|ERROR|FATAL to
+ * configure Log4j for the com.sojostudios.as3 package.
+ * 
  * @see JavaToAS3Compiler for more details on options
  * 
  * @author Kurtis Kopf
@@ -34,6 +39,8 @@ import com.sojostudios.as3.ant.types.SourceTarget;
 public class JavaToAS3Task extends Task
 {
 	private List<SourceTarget> targets = new ArrayList<SourceTarget>();
+	
+	private String logLevel = null;
 	
 	private boolean includeDefaultMutations = true;
 	private boolean forceMovieClip = false;
@@ -51,6 +58,8 @@ public class JavaToAS3Task extends Task
 	@Override
 	public void execute() throws BuildException
 	{
+		checkLogLevel();
+		
 		JavaToAS3Compiler me = new JavaToAS3Compiler();
 		
 		for(SourceTarget target : targets)
@@ -75,6 +84,48 @@ public class JavaToAS3Task extends Task
 				//this.handleErrorFlush("IOException: " + ioe.getMessage());
 				//ioe.printStackTrace();
 			}
+		}
+	}
+	
+	/**
+	 * Sometimes difficult to initialize Log4j from ANT, so we can
+	 * override it here if the property is set.
+	 */
+	private void checkLogLevel()
+	{
+		if (logLevel != null)
+		{
+			Level lvl = Level.INFO;
+			Logger logger = Logger.getLogger("com.sojostudios.as3");
+			if (logLevel.equalsIgnoreCase("none") || logLevel.equalsIgnoreCase("off"))
+			{
+				lvl = Level.OFF;
+			}
+			if (logLevel.equalsIgnoreCase("all"))
+			{
+				lvl = Level.ALL;
+			}
+			if (logLevel.equalsIgnoreCase("debug"))
+			{
+				lvl = Level.DEBUG;
+			}
+			if (logLevel.equalsIgnoreCase("info"))
+			{
+				lvl = Level.INFO;
+			}
+			if (logLevel.equalsIgnoreCase("warn"))
+			{
+				lvl = Level.WARN;
+			}
+			if (logLevel.equalsIgnoreCase("error"))
+			{
+				lvl = Level.ERROR;
+			}
+			if (logLevel.equalsIgnoreCase("fatal"))
+			{
+				lvl = Level.FATAL;
+			}
+			logger.setLevel(lvl);
 		}
 	}
 	
@@ -333,4 +384,19 @@ public class JavaToAS3Task extends Task
 		this.classesToVectors = classesToVectors;
 	}
 
+	/**
+	 * @return the logLevel
+	 */
+	public String getLogLevel()
+	{
+		return logLevel;
+	}
+
+	/**
+	 * @param logLevel the logLevel to set
+	 */
+	public void setLogLevel(String logLevel)
+	{
+		this.logLevel = logLevel;
+	}
 }
