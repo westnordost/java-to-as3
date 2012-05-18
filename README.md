@@ -1,4 +1,4 @@
-Java to AS3 Compiler v1.0.6
+Java to AS3 Compiler v1.0.8
 ===========================
 
 This software was developed by [Sojo Studios, Inc.](http://www.sojostudios.com/)
@@ -164,3 +164,22 @@ Building from Source
 
 You will need Ant and Ivy installed to build this project. Once they are installed, just run `ant` in the
 root project directory and will create a .jar file in the jar/ directory.
+
+
+Changelog
+---------
+
+v1.0.8
+* added support for extending array/vector/dictionary types
+
+v1.0.7
+* fixed scoping/mutation problem with class field declarations
+
+v1.0.6a
+* removed comments for Map declarations, Map&lt;a,Map&lt;b,c&gt;&gt; were creating syntax errors
+
+v1.0.6
+* added all standard Collection and Map classes for conversion
+
+v1.0.5
+* initial public release

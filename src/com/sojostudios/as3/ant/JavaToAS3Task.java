@@ -54,6 +54,9 @@ public class JavaToAS3Task extends Task
 	private String classesToArrays = null;
 	private String classesToDictionaries = null;
 	private String classesToVectors = null;
+	private String classesExtendArray = null;
+	private String classesExtendDictionary = null;
+	private String classesExtendVector = null;
 
 	@Override
 	public void execute() throws BuildException
@@ -142,6 +145,9 @@ public class JavaToAS3Task extends Task
 		me.setClassesToArrays(generateList(classesToArrays));
 		me.setClassesToDictionaries(generateList(classesToDictionaries));
 		me.setClassesToVectors(generateList(classesToVectors));
+		me.setClassesExtendArray(generateList(classesExtendArray));
+		me.setClassesExtendDictionary(generateList(classesExtendDictionary));
+		me.setClassesExtendVector(generateList(classesExtendVector));
 	}
 	
 	private void propOptionsFromSource(JavaToAS3Compiler me, SourceTarget target)
@@ -159,14 +165,17 @@ public class JavaToAS3Task extends Task
 		{
 			me.setForceMovieClip(Boolean.parseBoolean(ops.get("forcemovieclip")));
 		}
-		me.setPackageToPackage(generateMap(ops.get("packagetopackage")));
-		me.setClassesToClasses(generateMap(ops.get("classestoclasses")));
-		me.setImportsToImports(generateMap(ops.get("importstoimports")));
-		me.setImportsToIgnore(generateList(ops.get("importstoignore")));
-		me.setForcedImports(generateList(ops.get("forcedimports")));
-		me.setClassesToArrays(generateList(ops.get("classestoarrays")));
-		me.setClassesToDictionaries(generateList(ops.get("classestodictionaries")));
-		me.setClassesToVectors(generateList(ops.get("classestovectors")));
+		me.getPackageToPackage().putAll(generateMap(ops.get("packagetopackage")));
+		me.getClassesToClasses().putAll(generateMap(ops.get("classestoclasses")));
+		me.getImportsToImports().putAll(generateMap(ops.get("importstoimports")));
+		me.getImportsToIgnore().addAll(generateList(ops.get("importstoignore")));
+		me.getForcedImports().addAll(generateList(ops.get("forcedimports")));
+		me.getClassesToArrays().addAll(generateList(ops.get("classestoarrays")));
+		me.getClassesToDictionaries().addAll(generateList(ops.get("classestodictionaries")));
+		me.getClassesToVectors().addAll(generateList(ops.get("classestovectors")));
+		me.getClassesExtendArray().addAll(generateList(ops.get("classesextendarray")));
+		me.getClassesExtendDictionary().addAll(generateList(ops.get("classesextenddictionary")));
+		me.getClassesExtendVector().addAll(generateList(ops.get("classesextendvector")));
 	}
 	
 	private Map<String,String> generateMap(String input)
@@ -398,5 +407,53 @@ public class JavaToAS3Task extends Task
 	public void setLogLevel(String logLevel)
 	{
 		this.logLevel = logLevel;
+	}
+	
+	/**
+	 * @return the classesExtendArray
+	 */
+	public String getClassesExtendArray() 
+	{
+		return classesExtendArray;
+	}
+
+	/**
+	 * @param classesExtendArray the classesExtendArray to set
+	 */
+	public void setClassesExtendArray(String classesExtendArray) 
+	{
+		this.classesExtendArray = classesExtendArray;
+	}
+
+	/**
+	 * @return the classesExtendDictionary
+	 */
+	public String getClassesExtendDictionary() 
+	{
+		return classesExtendDictionary;
+	}
+
+	/**
+	 * @param classesExtendDictionary the classesExtendDictionary to set
+	 */
+	public void setClassesExtendDictionary(String classesExtendDictionary) 
+	{
+		this.classesExtendDictionary = classesExtendDictionary;
+	}
+
+	/**
+	 * @return the classesExtendVector
+	 */
+	public String getClassesExtendVector() 
+	{
+		return classesExtendVector;
+	}
+
+	/**
+	 * @param classesExtendVector the classesExtendVector to set
+	 */
+	public void setClassesExtendVector(String classesExtendVector)
+	{
+		this.classesExtendVector = classesExtendVector;
 	}
 }
