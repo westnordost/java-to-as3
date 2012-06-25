@@ -294,7 +294,8 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 	private void printNumeric(String value)
 	{
 		// remove any type-hinted suffixes (F,D,L, etc)
-		printer.print(value.replaceAll("[a-z,A-Z]", ""));
+		printer.print(value.replaceAll("[dflDFL]", ""));
+		//printer.print(value);
 	}
 
 	@Override

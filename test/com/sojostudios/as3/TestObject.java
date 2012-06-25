@@ -52,6 +52,7 @@ public class TestObject
 		int myInt = 0;
 		long myLong;
 		double myDouble = 1235D;
+		double myDouble2 = 12E3D;
 		float myFloat = 123.5123F;
 		byte myByte = 0x1;
 		
