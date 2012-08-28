@@ -499,7 +499,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	@Override
 	public Node visit(VariableDeclarationExpr n, Object arg)
 	{
-		boolean modified = modifyDecl(n.getType(), n.getVars());
+		boolean modified = modifyDecl(n.getType(), n.getVars(), arg);
 		if (modified)
 		{
 			return n;
@@ -516,7 +516,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	@Override
 	public Node visit(FieldDeclaration n, Object arg) 
 	{
-		boolean modified = modifyDecl(n.getType(), n.getVariables());
+		boolean modified = modifyDecl(n.getType(), n.getVariables(), arg);
 		if (modified)
 		{
 			return n;
@@ -527,7 +527,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		}
 	}
 	
-	private boolean modifyDecl(Type type, List<VariableDeclarator> vars)
+	private boolean modifyDecl(Type type, List<VariableDeclarator> vars, Object arg)
 	{
 		boolean modified = false;
 		if (type instanceof ReferenceType)
@@ -545,7 +545,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					if (name.matches(classToArray))
 					{
 						modified = true;
-						varDeclToArray(vars, rt, ct);
+						varDeclToArray(vars, rt, ct, arg);
 					}
 				}
 				// Dictionary conversions
@@ -554,7 +554,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					if (name.matches(classToDict))
 					{
 						modified = true;
-						varDeclToDictionary(vars, rt, ct);
+						varDeclToDictionary(vars, rt, ct, arg);
 					}
 				}
 				// Vector conversions
@@ -563,7 +563,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					if (name.matches(classToVect))
 					{
 						modified = true;
-						varDeclToVector(vars, rt, ct);
+						varDeclToVector(vars, rt, ct, arg);
 					}
 				}
 				// register variable type even for unmodified vars
@@ -645,7 +645,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 * @param rt
 	 * @param ct
 	 */
-	private void varDeclToArray(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
+	private void varDeclToArray(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct, Object arg)
 	{
 		logger.info("Converting variable declaration " + ct + " to Array [" + arrayClass + "] declaration with typing info");
 		// take the first typearg if it exists
@@ -673,6 +673,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 				//logger.warn("initialization expression "  + init.getClass());
 				// just destroy this sucker, replace with ArrayCreationExpression
 				varDec.setInit(new ArrayCreationExpr(rt,1,null));
+				varDec.getInit().accept(this, arg);
 			}
 		}
 	}
@@ -685,7 +686,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 * @param rt
 	 * @param ct
 	 */
-	private void varDeclToVector(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
+	private void varDeclToVector(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct, Object arg)
 	{
 		logger.info("Converting variable declaration " + ct + " to Vector [" + vectorClass + "] declaration with typing info");
 		
@@ -707,6 +708,10 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					oce.setType(ct);
 					oce.setTypeArgs(null);
 				}
+				else
+				{
+					init.accept(this, arg);
+				}
 			}
 		}
 	}
@@ -718,7 +723,7 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 * @param rt
 	 * @param ct
 	 */
-	private void varDeclToDictionary(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
+	private void varDeclToDictionary(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct, Object arg)
 	{
 		logger.info("Converting variable declaration " + ct + " to Dictionary [" + dictionaryClass + "] declaration without typing");
 		// take the first typearg if it exists
@@ -736,12 +741,16 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 			Expression init = varDec.getInit();
 			if (init != null)
 			{
-				//logger.warn("initialization expression "  + init.getClass());
+				logger.warn("initialization expression "  + init.getClass());
 				if (init instanceof ObjectCreationExpr)
 				{
 					ObjectCreationExpr oce = (ObjectCreationExpr) init;
 					oce.setType(new ClassOrInterfaceType(newName));
 					oce.setTypeArgs(null);
+				}
+				else
+				{
+					init.accept(this, arg);
 				}
 			}
 		}

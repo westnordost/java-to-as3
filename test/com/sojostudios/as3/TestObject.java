@@ -62,11 +62,15 @@ public class TestObject
 		myMap.remove("a");
 		myInt = myMap.size();
 		
+		Map<Object,Object> myMap2 = (Map<Object,Object>)myMap;
+		
 		List<String> myList = new ArrayList<String>();
 		myList.add("c");
 		myList.get(0);
 		myList.remove(0);
 		myList = new ArrayList<String>();
+		
+		List<String> myList2 = (List<String>)myList;
 		
 		String[] myArray = new String[2];
 		myArray[0] = "d";

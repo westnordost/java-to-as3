@@ -168,6 +168,9 @@ root project directory and will create a .jar file in the jar/ directory.
 
 Changelog
 ---------
+v1.0.12
+* fixed a bug where cast expressions were being ignored in variable declarations during mutation pass
+
 v1.0.11
 * added ability to modify mutation output class names
 

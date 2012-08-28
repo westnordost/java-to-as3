@@ -64,6 +64,10 @@
 				<exclude name="**/*.java" />
 			</fileset>
 		</copy>
+		<copy todir="${build.dir}">
+			<fileset dir="resources">
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="test" depends="compile,jar">

@@ -1204,7 +1204,7 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 				printer.print("--");
 				break;
 			default:
-				logger.warn("out of context unary operator " + n.getOperator());
+				//logger.warn("out of context unary operator " + n.getOperator());
 				break;
 		}
 
@@ -1219,7 +1219,7 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 				printer.print("--");
 				break;
 			default:
-				logger.warn("out of context unary operator " + n.getOperator());
+				//logger.warn("out of context unary operator " + n.getOperator());
 				break;
 		}
 	}
