@@ -48,6 +48,10 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	public static final String DICTIONARY_MUTATION_FLAG = "Dictionary";
 	public static final String VECTOR_MUTATION_FLAG = "Vector";
 	
+	public static final String DEFAULT_ARRAY_CLASS = "Array";
+	public static final String DEFAULT_DICTIONARY_CLASS = "Dictionary";
+	public static final String DEFAULT_VECTOR_CLASS = "Vector";
+	
 	private Logger logger = Logger.getLogger(getClass());
 	
 	private Map<String,String> packageToPackage = new HashMap<String,String>();
@@ -63,6 +67,10 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	private List<String> classesExtendVector = new ArrayList<String>();
 	private boolean forceSprite = false;
 	private boolean forceMovieClip = false;
+	
+	private String arrayClass = DEFAULT_ARRAY_CLASS;
+	private String dictionaryClass = DEFAULT_DICTIONARY_CLASS;
+	private String vectorClass = DEFAULT_VECTOR_CLASS;
 	
 	private MutationVariableScope varScope = new MutationVariableScope();
 	
@@ -343,8 +351,8 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		{
 			if (n.getName().matches(incoming))
 			{
-				logger.info("changing class reference from " + n.getName() + " to Array");
-				n.setName("Array");
+				logger.info("changing class reference from " + n.getName() + " to Array [" + arrayClass + "]");
+				n.setName(arrayClass);
 			}
 		}
 		
@@ -352,8 +360,8 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		{
 			if (n.getName().matches(incoming))
 			{
-				logger.info("changing class reference from " + n.getName() + " to Dictionary");
-				n.setName("Dictionary");
+				logger.info("changing class reference from " + n.getName() + " to Dictionary [" + dictionaryClass + "]");
+				n.setName(dictionaryClass);
 			}
 		}
 		
@@ -361,8 +369,8 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 		{
 			if (n.getName().matches(incoming))
 			{
-				logger.info("changing class reference from " + n.getName() + " to Vector");
-				n.setName("Vector");
+				logger.info("changing class reference from " + n.getName() + " to Vector [" +  vectorClass + "]");
+				n.setName(vectorClass);
 			}
 		}
 		
@@ -639,13 +647,13 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 */
 	private void varDeclToArray(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
 	{
-		logger.info("Converting variable declaration " + ct + " to Array declaration with typing info");
+		logger.info("Converting variable declaration " + ct + " to Array [" + arrayClass + "] declaration with typing info");
 		// take the first typearg if it exists
-		String newName = "Array";
+		String newName = arrayClass;
 		if (ct.getTypeArgs() != null && ct.getTypeArgs().size() > 0)
 		{
 			String typeArg = ct.getTypeArgs().get(0).toString();
-			logger.info("taking TypeArg " + typeArg + " as new Array class type");
+			logger.info("taking TypeArg " + typeArg + " as new Array [" + arrayClass + "] class type");
 			newName = typeArg;
 			ct.setTypeArgs(null); // wipe out TypeArgs
 		}
@@ -679,9 +687,9 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 */
 	private void varDeclToVector(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
 	{
-		logger.info("Converting variable declaration " + ct + " to Array declaration with typing info");
+		logger.info("Converting variable declaration " + ct + " to Vector [" + vectorClass + "] declaration with typing info");
 		
-		ct.setName("Vector");
+		ct.setName(vectorClass);
 		
 		for(VariableDeclarator varDec : vars)
 		{
@@ -712,9 +720,9 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 */
 	private void varDeclToDictionary(List<VariableDeclarator> vars, ReferenceType rt, ClassOrInterfaceType ct)
 	{
-		logger.info("Converting variable declaration " + ct + " to Dictionary declaration without typing");
+		logger.info("Converting variable declaration " + ct + " to Dictionary [" + dictionaryClass + "] declaration without typing");
 		// take the first typearg if it exists
-		String newName = "Dictionary";
+		String newName = dictionaryClass;
 		//ct.setTypeArgs(null);
 		ct.setName(newName);
 		
@@ -1025,5 +1033,53 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	public void setForceMovieClip(boolean forceMovieClip)
 	{
 		this.forceMovieClip = forceMovieClip;
+	}
+
+	/**
+	 * @return the arrayClass
+	 */
+	public String getArrayClass()
+	{
+		return arrayClass;
+	}
+
+	/**
+	 * @param arrayClass the arrayClass to set
+	 */
+	public void setArrayClass(String arrayClass)
+	{
+		this.arrayClass = arrayClass;
+	}
+
+	/**
+	 * @return the dictionaryClass
+	 */
+	public String getDictionaryClass()
+	{
+		return dictionaryClass;
+	}
+
+	/**
+	 * @param dictionaryClass the dictionaryClass to set
+	 */
+	public void setDictionaryClass(String dictionaryClass)
+	{
+		this.dictionaryClass = dictionaryClass;
+	}
+
+	/**
+	 * @return the vectorClass
+	 */
+	public String getVectorClass()
+	{
+		return vectorClass;
+	}
+
+	/**
+	 * @param vectorClass the vectorClass to set
+	 */
+	public void setVectorClass(String vectorClass)
+	{
+		this.vectorClass = vectorClass;
 	}
 }

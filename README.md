@@ -168,6 +168,11 @@ root project directory and will create a .jar file in the jar/ directory.
 
 Changelog
 ---------
+v1.0.11
+* added ability to modify mutation output class names
+
+v1.0.10
+* fixed an issue with scientific notation on doubles, where E was removed from the output string
 
 v1.0.9
 * added support for loglevel attribute in ant task

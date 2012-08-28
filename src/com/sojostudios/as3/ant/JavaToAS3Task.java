@@ -57,6 +57,10 @@ public class JavaToAS3Task extends Task
 	private String classesExtendArray = null;
 	private String classesExtendDictionary = null;
 	private String classesExtendVector = null;
+	
+	private String arrayClass = null;
+	private String vectorClass = null;
+	private String dictionaryClass = null;
 
 	@Override
 	public void execute() throws BuildException
@@ -148,6 +152,9 @@ public class JavaToAS3Task extends Task
 		me.setClassesExtendArray(generateList(classesExtendArray));
 		me.setClassesExtendDictionary(generateList(classesExtendDictionary));
 		me.setClassesExtendVector(generateList(classesExtendVector));
+		me.setArrayClass(arrayClass);
+		me.setVectorClass(vectorClass);
+		me.setDictionaryClass(dictionaryClass);
 	}
 	
 	private void propOptionsFromSource(JavaToAS3Compiler me, SourceTarget target)
@@ -455,5 +462,53 @@ public class JavaToAS3Task extends Task
 	public void setClassesExtendVector(String classesExtendVector)
 	{
 		this.classesExtendVector = classesExtendVector;
+	}
+
+	/**
+	 * @return the arrayClass
+	 */
+	public String getArrayClass()
+	{
+		return arrayClass;
+	}
+
+	/**
+	 * @param arrayClass the arrayClass to set
+	 */
+	public void setArrayClass(String arrayClass)
+	{
+		this.arrayClass = arrayClass;
+	}
+
+	/**
+	 * @return the vectorClass
+	 */
+	public String getVectorClass()
+	{
+		return vectorClass;
+	}
+
+	/**
+	 * @param vectorClass the vectorClass to set
+	 */
+	public void setVectorClass(String vectorClass)
+	{
+		this.vectorClass = vectorClass;
+	}
+
+	/**
+	 * @return the dictionaryClass
+	 */
+	public String getDictionaryClass()
+	{
+		return dictionaryClass;
+	}
+
+	/**
+	 * @param dictionaryClass the dictionaryClass to set
+	 */
+	public void setDictionaryClass(String dictionaryClass)
+	{
+		this.dictionaryClass = dictionaryClass;
 	}
 }

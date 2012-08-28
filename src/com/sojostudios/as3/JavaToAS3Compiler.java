@@ -125,6 +125,10 @@ public class JavaToAS3Compiler
 	private boolean forceSprite = false;
 	private boolean forceMovieClip = false;
 	
+	private String arrayClass = null;
+	private String vectorClass = null;
+	private String dictionaryClass = null;
+	
 	/**
 	 * Constructor.
 	 */
@@ -270,6 +274,19 @@ public class JavaToAS3Compiler
 		if (classesExtendVector != null && classesExtendVector.size() > 0)
 		{
 			as3Mut.getClassesExtendVector().addAll(classesExtendVector);
+		}
+		
+		if (arrayClass != null && !arrayClass.isEmpty())
+		{
+			as3Mut.setArrayClass(arrayClass);
+		}
+		if (vectorClass != null && !vectorClass.isEmpty())
+		{
+			as3Mut.setVectorClass(vectorClass);
+		}
+		if (dictionaryClass != null && !dictionaryClass.isEmpty())
+		{
+			as3Mut.setDictionaryClass(dictionaryClass);
 		}
 	}
 
@@ -527,5 +544,53 @@ public class JavaToAS3Compiler
 	public void setForceMovieClip(boolean forceMovieClip)
 	{
 		this.forceMovieClip = forceMovieClip;
+	}
+
+	/**
+	 * @return the arrayClass
+	 */
+	public String getArrayClass()
+	{
+		return arrayClass;
+	}
+
+	/**
+	 * @param arrayClass the arrayClass to set
+	 */
+	public void setArrayClass(String arrayClass)
+	{
+		this.arrayClass = arrayClass;
+	}
+
+	/**
+	 * @return the vectorClass
+	 */
+	public String getVectorClass()
+	{
+		return vectorClass;
+	}
+
+	/**
+	 * @param vectorClass the vectorClass to set
+	 */
+	public void setVectorClass(String vectorClass)
+	{
+		this.vectorClass = vectorClass;
+	}
+
+	/**
+	 * @return the dictionaryClass
+	 */
+	public String getDictionaryClass()
+	{
+		return dictionaryClass;
+	}
+
+	/**
+	 * @param dictionaryClass the dictionaryClass to set
+	 */
+	public void setDictionaryClass(String dictionaryClass)
+	{
+		this.dictionaryClass = dictionaryClass;
 	}
 }

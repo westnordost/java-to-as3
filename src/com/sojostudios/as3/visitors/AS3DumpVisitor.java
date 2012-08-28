@@ -1203,6 +1203,9 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 			case preDecrement:
 				printer.print("--");
 				break;
+			default:
+				logger.warn("out of context unary operator " + n.getOperator());
+				break;
 		}
 
 		n.getExpr().accept(this, arg);
@@ -1214,6 +1217,9 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 				break;
 			case posDecrement:
 				printer.print("--");
+				break;
+			default:
+				logger.warn("out of context unary operator " + n.getOperator());
 				break;
 		}
 	}
