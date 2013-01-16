@@ -403,6 +403,12 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 					BinaryExpr expr = new BinaryExpr(n.getScope(), right, BinaryExpr.Operator.equals);
 					return expr;
 				}
+				if (mut.type.getName().equals("String") && method.equals("length"))
+				{
+					logger.info("found a string length method reference");
+					FieldAccessExpr expr = new FieldAccessExpr(n.getScope(), "length");
+					return expr;
+				}
 				// array and dictionary mutations
 				if (mut.hasFlag(ARRAY_MUTATION_FLAG) || mut.hasFlag(DICTIONARY_MUTATION_FLAG) || mut.hasFlag(VECTOR_MUTATION_FLAG))
 				{
