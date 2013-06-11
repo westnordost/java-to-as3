@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.sojostudios.as3.visitors.AS3DumpVisitor;
 import com.sojostudios.as3.visitors.AS3MutationVisitor;
 
@@ -108,6 +110,8 @@ import com.sojostudios.as3.visitors.AS3MutationVisitor;
  */
 public class JavaToAS3Compiler
 {
+	private final Logger logger = Logger.getLogger(getClass());
+
 	private Map<File,File> files = new HashMap<File,File>();
 	private boolean includeDefaultMutations = true;
 	
@@ -147,11 +151,50 @@ public class JavaToAS3Compiler
 	{
 		if (files != null && files.size() > 0)
 		{
-			for(File inputFile : files.keySet())
+			for (File input : files.keySet())
 			{
-				File outputFile = files.get(inputFile);
-				compileFile(inputFile, outputFile);
+				File output = files.get(input);
+				recursiveCompileFile(input, output);
 			}
+		}
+	}
+
+	/**
+	 *  Compile a Java input file to an AS3 file. If the input file denotes a directory, all .java files
+	 *  in the directory will be compiled recursively
+	 *
+	 * @param input Input file
+	 * @param output Output file
+	 * @throws ParseException
+	 * @throws IOException
+	 */
+	private void recursiveCompileFile(File input, File output) throws ParseException, IOException
+	{
+		if (input.isDirectory())
+		{
+			for (File file : input.listFiles())
+			{
+
+				// when recursing down the directory tree, only try to parse .java files
+				if (file.isDirectory())
+				{
+					File fileOutput = new File(output, file.getName());
+					recursiveCompileFile(file, fileOutput);
+				}
+				else if (file.getName().endsWith(".java"))
+				{
+					// create any intermediate dirs
+					if (output != null)
+					{
+						output.mkdirs();
+					}
+					compileFile(file, output);
+				}
+			}
+		}
+		else
+		{
+			compileFile(input, output);
 		}
 	}
 	
@@ -165,6 +208,8 @@ public class JavaToAS3Compiler
 	 */
 	public void compileFile(File inputFile, File outputDir) throws ParseException, IOException
 	{
+		logger.info("Parsing "+inputFile.getPath() + "...");
+		
 		FileInputStream in = new FileInputStream(inputFile);
 		CompilationUnit cu = null;
 		cu = JavaParser.parse(in);
@@ -184,7 +229,8 @@ public class JavaToAS3Compiler
 		//logger.debug("Compilation output:\n" + output);
 		
 		File outputFile = null;
-		if (outputDir.isDirectory())
+		// outputDir/File is optional
+		if (outputDir == null || outputDir.isDirectory())
 		{
 			String name = inputFile.getName().replace(".java", ".as");
 			outputFile = new File(outputDir, name);
@@ -193,6 +239,7 @@ public class JavaToAS3Compiler
 		{
 			outputFile = outputDir;
 		}
+	
 		outputFile.createNewFile();
 		FileOutputStream out = new FileOutputStream(outputFile);
 		out.write(output.getBytes());
@@ -275,7 +322,6 @@ public class JavaToAS3Compiler
 		{
 			as3Mut.getClassesExtendVector().addAll(classesExtendVector);
 		}
-		
 		if (arrayClass != null && !arrayClass.isEmpty())
 		{
 			as3Mut.setArrayClass(arrayClass);
@@ -292,15 +338,19 @@ public class JavaToAS3Compiler
 
 	public static void main(String[] args) throws Exception
 	{
-		if (args.length < 2)
+		if (args.length < 1)
 		{
-			System.out.println("Usage: java JavaToAS3Compiler <inputFile> <outputFile>");
+			System.out.println("Usage: java JavaToAS3Compiler <input file or directory> [<output file or directory>]");
 			return;
 		}
-		
+
 		JavaToAS3Compiler me = new JavaToAS3Compiler();
 		File inFile = new File(args[0]);
-		File outFile = new File(args[1]);
+		File outFile = null;
+		if (args.length == 2)
+		{
+			outFile = new File(args[1]);
+		}
 		me.getFiles().put(inFile, outFile);
 		
 		me.compileAll();
