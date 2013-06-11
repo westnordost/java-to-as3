@@ -1,12 +1,5 @@
 package com.sojostudios.as3.visitors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.ImportDeclaration;
 import japa.parser.ast.Node;
@@ -32,6 +25,13 @@ import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.visitor.ModifierVisitorAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 /**
  * This class mutates the AST to remove or exchange elements from Java
@@ -88,7 +88,6 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 	 */
 	public void includeDefaults()
 	{
-		forcedImports.add("flash.utils.Dictionary");
 		
 		importsToIgnore.add("java.*");
 		importsToImports.put("java\\.util\\..*Map", "flash.utils.Dictionary");
