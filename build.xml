@@ -10,6 +10,9 @@
 	<property name="jar.dir" value="jar" />
 	<property name="jar.name" value="sojo-java-to-as3" />
 	<property name="jar.version" value="${build.version}" />
+	<property name="jar.file" location="${jar.dir}/${jar.name}-${jar.version}.jar"/>
+	<property name="main-class"  value="com.sojostudios.as3.JavaToAS3Compiler" />
+
 	
 	<ivy:settings file="ivysettings.xml" />
 	
@@ -102,7 +105,20 @@
 	
 	<target name="jar" depends="compile">
 		<mkdir dir="${jar.dir}" />
-		<jar destfile="${jar.dir}/${jar.name}-${jar.version}.jar" basedir="${build.dir}" >
+		
+		<ivy:retrieve pattern="${jar.dir}/lib/[artifact].[ext]"/>
+		
+        <manifestclasspath property="jar.classpath" jarfile="${jar.file}">
+            <classpath>
+                <fileset dir="${jar.dir}/lib" includes="*.jar"/>
+            </classpath>
+        </manifestclasspath>
+		
+		<jar destfile="${jar.file}" basedir="${build.dir}" >
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            	<attribute name="Class-Path" value="${jar.classpath}"/>
+            </manifest>
 		</jar>
 	</target>
 	
