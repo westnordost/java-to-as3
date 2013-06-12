@@ -319,6 +319,12 @@ public class AS3MutationVisitor extends ModifierVisitorAdapter<Object>
 			String impName = imp.getName().toString();
 			if (used.get(impName) == null)
 			{
+				// if no other than forced imports were added, CompilationUnit.getImports will still be null
+				if(n.getImports() == null)
+				{
+					n.setImports(new ArrayList<ImportDeclaration>());
+				}
+				
 				used.put(impName, true);
 				n.getImports().add(imp);
 				logger.info("adding import " + impName);
