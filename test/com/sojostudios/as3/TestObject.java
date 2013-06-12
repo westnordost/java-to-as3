@@ -17,6 +17,8 @@ public class TestObject
 	
 	private int hiddenInt = 12354;
 	
+	public float[] floatArray = {1,2,3,4,5};
+	
 	private List<String> hiddenList = new ArrayList<String>();
 	private Map<String,String> hiddenMap = new HashMap<String,String>();
 	
