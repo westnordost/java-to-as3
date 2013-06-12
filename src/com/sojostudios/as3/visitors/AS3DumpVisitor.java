@@ -1050,7 +1050,6 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 	{
 		// remove any non-numeric type-hinting suffixes (D,L,F, etc)
 		printNumeric(n.getValue());
-		//printer.print(n.getValue());
 	}
 
 	@Override
@@ -1512,8 +1511,8 @@ public class AS3DumpVisitor implements VoidVisitor<Object>
 	@Override
 	public void visit(ForeachStmt n, Object arg)
 	{
-		logger.error("Detected ForEach style for loop... this probably won't convert correctly. Use standard FOR statements.");
-		printer.print("for (");
+		logger.warn("Detected ForEach style for loop... this probably won't convert correctly. Use standard FOR statements.");
+		printer.print("for each (");
 		n.getVariable().accept(this, arg);
 		printer.print(" in ");
 		n.getIterable().accept(this, arg);
